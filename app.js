@@ -1,33 +1,57 @@
 // Control budget data 
 let budgetController = (function() {
-    let x = 23;
 
-    let add = function(a) {
-        return x + a;
-    }
+    // some code
 
-    return publicTest: function(b) {
-        return add(b);
-    }
 })();
+
 
 
 
 // Control UI
-let uiController = (function() {
+let UIController = (function() {
+
     // Some code
+
 })();
 
 
-// Connects data and UI modules
-let controller = (function(budgetCtrl, uiCtrl) {
+// Global app controller
+let controller = (function(budgetCtrl, UICtrl) {
 
-    let z = budgetCtrl.publicTest(5);
-    return {
-        anotherPublic: function() {
-            console.log(z);
-        }
+    let ctrlAddItem = function(){
+
+        // 1. Get field input data.
+
+
+
+        // 2. Add item to budget control.
+
+
+        // 3. Add new item to UI.
+
+
+        // 4. Calculate budget.
+
+
+        // 5. Display budget to UI.
+
+
     }
 
-})(budgetController, uiController);
+
+    // Input field event listener.
+    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+
+    document.addEventListener('keypress', function(e) {
+        if (event.keyCode === 13 || event.which === 13) {
+
+            ctrlAddItem();
+
+        }
+    });
+
+
+
+})(budgetController, UIController);
 
