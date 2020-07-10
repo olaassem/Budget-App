@@ -1,28 +1,48 @@
-// Control budget data 
+// Model
 let budgetController = (function() {
 
-    // some code
-
 })();
 
 
 
 
-// Control UI
+// View
 let UIController = (function() {
 
-    // Some code
+    let DOMStrings = {
+        inputType: '.add__type',
+        inputDescription: '.add__description',
+        inputValue: '.add__value',
+        inputBtn: '.add__btn'
+    }
+
+    return {
+        getInput: function() {
+            return {
+                type: document.querySelector(DOMStrings.inputType).value,
+                description: document.querySelector(DOMStrings.inputDescription).value,
+                value: document.querySelector(DOMStrings.inputValue).value
+            };
+        },
+
+        getDOMStrings: function() {
+            return DOMStrings;
+        }
+    };
 
 })();
 
 
-// Global app controller
+// Controller
 let controller = (function(budgetCtrl, UICtrl) {
+
+    let DOM = UICtrl.getDOMStrings();
 
     let ctrlAddItem = function(){
 
         // 1. Get field input data.
-
+        let input = UICtrl.getInput();
+        console.log(input);
 
 
         // 2. Add item to budget control.
@@ -41,10 +61,10 @@ let controller = (function(budgetCtrl, UICtrl) {
 
 
     // Input field event listener.
-    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
     document.addEventListener('keypress', function(e) {
-        if (event.keyCode === 13 || event.which === 13) {
+        if (e.keyCode === 13 || e.which === 13) {
 
             ctrlAddItem();
 
