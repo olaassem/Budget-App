@@ -1,6 +1,28 @@
 // Model
 let budgetController = (function() {
+    
+    let Expense = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
 
+    let Income = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
+
+    let data = {
+        allItems: {
+            exp: [],
+            inc: []
+        },
+        totals: {
+            exp: 0,
+            inc: 0
+        }
+    }
 })();
 
 
@@ -75,6 +97,7 @@ let controller = (function(budgetCtrl, UICtrl) {
     return {
         init: function(){
             setupEventListeners();
+            console.log('App has started');
         }
     }
 
