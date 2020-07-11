@@ -13,15 +13,28 @@ let budgetController = (function() {
         this.value = value;
     };
 
+    let calculateTotal = function(type) {
+        let sum = 0;
+        data.allItems[type].forEach(function (cur){
+            sum += cur.value;
+        });
+
+        data.totals[type] = sum;
+    };
+
     let data = {
         allItems: {
             exp: [],
             inc: []
         },
+
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+
+        budget: 0,
+        percentage: -1
     };
 
 
@@ -51,13 +64,37 @@ let budgetController = (function() {
             return newItem;
         },
 
+        calculateBudget: function() {
+
+            // Sum of all income & expenses
+            calculateTotal('exp');
+            calculateTotal('inc');
+
+            // Calculate budget: income - expenses
+            data.budget = data.totals.inc - data.totals.exp;
+
+            // Percentage of income we have spent on expenses
+            if ( data.totals.inc > 0) {
+                data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            } else {
+                data.percentage = -1;
+            }
+        },
+
+        getBudget: function() {
+            return {
+                budget: data.budget,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                percentage: data.percentage
+            }
+        },
+
         testing: function(){
             console.log(data);
         }
     }
 })();
-
-
 
 
 // View
@@ -128,7 +165,6 @@ let UIController = (function() {
             return DOMStrings;
         }
     };
-
 })();
 
 
@@ -153,12 +189,13 @@ let controller = (function(budgetCtrl, UICtrl) {
     let updateBudget = function(){
 
         // 1. Calculate budget.
-
+        budgetCtrl.calculateBudget();
 
         // 2. Return  budget.
-
+        let budget = budgetCtrl.getBudget();
 
         // 3. Display budget to UI.
+        console.log(budget);
     };
 
     let ctrlAddItem = function(){
@@ -189,8 +226,6 @@ let controller = (function(budgetCtrl, UICtrl) {
             console.log('App has started');
         }
     }
-
-
 })(budgetController, UIController);
 
 
