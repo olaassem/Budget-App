@@ -154,7 +154,24 @@ let UIController = (function() {
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
         expensesPercLabel: '.item__percentage'
-    }
+    };
+
+    let formatNumber = function(num, type){
+        let numSplit, int, dec, t;
+
+        num = Math.abs(num);
+        num = num.toFixed(2);
+
+        numSplit = num.split('.');
+        int = numSplit[0];
+        dec = numSplit[1];
+
+        if (int.length > 3) {
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3 , 3);
+        }
+
+        return (t === 'exp' ? sign = '-' : '+') + ' ' + int + '.' + dec;
+    };
 
     return {
         getInput: function() {
@@ -185,7 +202,7 @@ let UIController = (function() {
             // Replace the placeholder text with actual data recieved from object
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%', obj.description);
-            newHtml = newHtml.replace('%value%', obj.value);
+            newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
             // Insert HTML to the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -212,10 +229,12 @@ let UIController = (function() {
         },
 
         displayBudget: function(obj) {
-            console.log(obj);
-            document.querySelector(DOMStrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
-            document.querySelector(DOMStrings.expensesLabel).textContent = obj.totalExp;
+            let type;
+            obj.budget > 0 ? type = 'inc' : type = 'exp';
+
+            document.querySelector(DOMStrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMStrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+            document.querySelector(DOMStrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
             if (obj.percentage > 0) {
                 document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%';
