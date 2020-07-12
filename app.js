@@ -5,7 +5,20 @@ let budgetController = (function() {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
     };
+
+    Expense.prototype.calcPercentage = function(totalIncome) {
+        if (totalIncome > 0) {
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+            this.percentage = -1;
+        }
+    };
+
+    Expense.prototype.getPercentage = function(){
+        return this.percentage;
+    }
 
     let Income = function(id, description, value){
         this.id = id;
@@ -93,6 +106,20 @@ let budgetController = (function() {
             } else {
                 data.percentage = -1;
             }
+        },
+
+        calculatePercentages: function(){
+            data.allItems.exp.forEach(function(current){
+                current.calcPercentage(data.totals.inc);
+            })
+        },
+
+        getPercentages: function(){
+            let allPerc = data.allItems.exp.map(function(cur){
+                return cur.getPercentage();
+            });
+
+            return allPerc;
         },
 
         getBudget: function() {
@@ -224,7 +251,6 @@ let controller = (function(budgetCtrl, UICtrl) {
     };
 
 
-
     let updateBudget = function(){
 
         // 1. Calculate budget.
@@ -235,6 +261,19 @@ let controller = (function(budgetCtrl, UICtrl) {
 
         // 3. Display budget to UI.
         UICtrl.displayBudget(budget);
+    };
+
+
+    let updatePercentages = function(){
+
+        // 1. Calculate percentages.
+        budgetCtrl.calculatePercentages();
+
+        // 2. Read percentages from the budget controller.
+        let percentages = budgetCtrl.getPercentages();
+
+        // 3. Update the UI.
+        console.log(percentages);
     };
 
     let ctrlAddItem = function(){
@@ -256,6 +295,9 @@ let controller = (function(budgetCtrl, UICtrl) {
 
             // 5. Calculate & update budget.
             updateBudget();
+
+            // 6. Calculate & update percentages.
+            updatePercentages();
         }
     };
 
@@ -277,6 +319,9 @@ let controller = (function(budgetCtrl, UICtrl) {
 
             // 3. Update and show the new budget.
             updateBudget();
+
+            // 4. Calculate & update percentages.
+            updatePercentages();
         }
     };
 
