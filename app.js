@@ -176,6 +176,12 @@ let UIController = (function() {
         return (t === 'exp' ? sign = '-' : sign = '+') + ' ' + int + '.' + dec;
     };
 
+    let nodeListForEach = function(list, callback){
+        for (let i = 0; i < list.length; i++) {
+            callback(list[i], i)
+        }
+    };
+
     return {
         getInput: function() {
             return {
@@ -249,12 +255,6 @@ let UIController = (function() {
         displayPercentages: function(percentages){
             let fields = document.querySelectorAll(DOMStrings.expensesPercLabel);
 
-            let nodeListForEach = function(list, callback){
-                for (let i = 0; i < list.length; i++) {
-                    callback(list[i], i)
-                }
-            };
-
             nodeListForEach(fields, function(current, index){
                 if (percentages[index] > 0) {
                     current.textContent = percentages[index] + '%';
@@ -272,7 +272,23 @@ let UIController = (function() {
             month = now.getMonth();
             months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             year = now.getFullYear();
+
             document.querySelector(DOMStrings.dateLabel).textContent = months[month] + ', ' + year;
+        },
+
+        changedType: function(){
+            let fields = document.querySelectorAll(
+                DOMStrings.inputType + ',' +
+                DOMStrings.inputDescription + ',' +
+                DOMStrings.inputValue
+            );
+
+            nodeListForEach(fields, function(curr){
+                curr.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMStrings.inputBtn).classList.toggle('red');
+            
         },
 
         getDOMStrings: function() {
@@ -298,6 +314,8 @@ let controller = (function(budgetCtrl, UICtrl) {
         });
 
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
+
     };
 
 
