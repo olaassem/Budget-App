@@ -153,7 +153,8 @@ let UIController = (function() {
         expensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expensesPercLabel: '.item__percentage'
+        expensesPercLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
     };
 
     let formatNumber = function(num, type){
@@ -166,11 +167,13 @@ let UIController = (function() {
         int = numSplit[0];
         dec = numSplit[1];
 
+        console.log(t);
+
         if (int.length > 3) {
             int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3 , 3);
         }
 
-        return (t === 'exp' ? sign = '-' : '+') + ' ' + int + '.' + dec;
+        return (t === 'exp' ? sign = '-' : sign = '+') + ' ' + int + '.' + dec;
     };
 
     return {
@@ -259,6 +262,17 @@ let UIController = (function() {
                     current.textContent = '---';
                 }
             })
+        },
+
+        displayMonth: function(){
+
+            let now, year, month, months;
+
+            now = new Date();
+            month = now.getMonth();
+            months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            year = now.getFullYear();
+            document.querySelector(DOMStrings.dateLabel).textContent = months[month] + ', ' + year;
         },
 
         getDOMStrings: function() {
@@ -364,6 +378,7 @@ let controller = (function(budgetCtrl, UICtrl) {
     return {
         init: function(){
             setupEventListeners();
+            UICtrl.displayMonth();
             UICtrl.displayBudget({
                 budget: 0,
                 totalInc: 0,
